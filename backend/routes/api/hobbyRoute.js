@@ -13,23 +13,26 @@ router.get('/hobby', (req, res) => {
 // Get hobbies for single User
 router.get('/hobby/:userId', async (req, res) => {
     const user = await User.findOne({"_id": req.body.userId});
-    const profile = await Profile.findOne({ userId: req.params.userId });
-    res.send(profile);
+    const profile = await Profile.find({ userId: req.params.userId });
+    res.status(200).json({"hobby": profile}); 
 });
 
 
 // Post Hobby
 router.post('/hobby', async (req, res) => {
+  console.log(req.body)
     const user = await User.findOne({"_id": req.body.userId});
+    console.log('User is ', user);
     var newFields = {};
     newFields.userId = user;
     newFields.name = req.body.name;
     newFields.passion = req.body.passion;
     newFields.year = req.body.year;
     const profile = new Profile(newFields);
+    console.log(newFields);
     // return res.send(profile);
-    await profile.save();
-    res.status(200).json({"userProfile": user, "message": "User profile saved successfuly"}); 
+    var hobby = await profile.save();
+    res.status(200).json({"hobby": hobby, "message": "Hobby saved successfuly"}); 
 });
 
 // Delete Hobby
